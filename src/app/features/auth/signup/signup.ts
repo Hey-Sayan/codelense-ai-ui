@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -13,8 +13,8 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class Signup {
   signupForm: FormGroup;
-  errorMessage: string | null = null;
-  isLoading = false;
+  errorMessage = signal<string | null>(null);
+  isLoading = signal(false);
 
   constructor(
     private fb: FormBuilder,
@@ -34,17 +34,17 @@ export class Signup {
       return;
     }
 
-    this.errorMessage = null;
-    this.isLoading = true;
+    this.errorMessage.set(null);
+    this.isLoading.set(true);
 
     this.authService.register(this.signupForm.value).subscribe({
       next: () => {
-        this.isLoading = false;
+        this.isLoading.set(false);
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = err.error?.message || 'Registration failed. Please try again.';
+        this.isLoading.set(false);
+        this.errorMessage.set(err.error?.message || 'Registration failed. Please try again.');
       }
     });
   }

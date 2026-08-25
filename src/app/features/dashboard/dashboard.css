@@ -1,0 +1,106 @@
+.dashboard-container {
+  min-height: 100vh;
+  background-color: #f4f5f7;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dashboard-header h1 {
+  font-size: 1.4rem;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.logout-btn {
+  padding: 0.5rem 1.2rem;
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #e5e7eb;
+}
+
+.dashboard-content {
+  display: flex;
+  height: calc(100vh - 65px);
+}
+
+.sidebar {
+  width: 300px;
+  background: white;
+  border-right: 1px solid #e5e7eb;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.sidebar h2 {
+  font-size: 1.1rem;
+  margin: 0 0 1rem 0;
+  color: #1a1a1a;
+}
+
+.status-text {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.status-text.error {
+  color: #dc2626;
+}
+
+.project-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.75rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-bottom: 0.4rem;
+}
+
+.project-item:hover {
+  background-color: #f3f4f6;
+}
+
+.project-name {
+  font-weight: 600;
+  color: #1a1a1a;
+  font-size: 0.95rem;
+}
+
+.project-meta {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-top: 0.2rem;
+}
+
+.main-panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.placeholder-text {
+  color: #9ca3af;
+  font-size: 1rem;
+}

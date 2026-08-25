@@ -30,12 +30,12 @@
         }
       </div>
 
-      @if (errorMessage) {
-        <div class="server-error">{{ errorMessage }}</div>
+      @if (errorMessage()) {
+        <div class="server-error">{{ errorMessage() }}</div>
       }
 
-      <button type="submit" [disabled]="isLoading">
-        {{ isLoading ? 'Logging in...' : 'Log In' }}
+      <button type="submit" [disabled]="isLoading()">
+        {{ isLoading() ? 'Logging in...' : 'Log In' }}
       </button>
     </form>
 
