@@ -7,6 +7,7 @@
   <div class="dashboard-content">
     <div class="sidebar">
       <h2>Your Projects</h2>
+      <button class="new-project-btn" (click)="goToCreateProject()">+ New Project</button>
 
       @if (isLoading()) {
         <p class="status-text">Loading projects...</p>

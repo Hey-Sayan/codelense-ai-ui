@@ -1,0 +1,92 @@
+<div class="page-container">
+  <div class="page-card">
+    <h1>Create New Project</h1>
+    <p class="subtitle">Upload a ZIP file containing your C# project to analyze it.</p>
+
+    <!-- Step 1: Create the project -->
+    @if (!projectId()) {
+      <form [formGroup]="projectForm" (ngSubmit)="onCreateProject()">
+        <div class="form-group">
+          <label for="name">Project Name</label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            placeholder="My C# Project"
+          />
+          @if (projectForm.get('name')?.touched && projectForm.get('name')?.invalid) {
+            <span class="error-text">Project name is required.</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="sourceType">Source Type</label>
+          <select id="sourceType" formControlName="sourceType">
+            <option value="Zip">ZIP Upload</option>
+          </select>
+        </div>
+
+        @if (errorMessage()) {
+          <div class="server-error">{{ errorMessage() }}</div>
+        }
+
+        <button type="submit" [disabled]="isCreatingProject()">
+          {{ isCreatingProject() ? 'Creating...' : 'Create Project' }}
+        </button>
+      </form>
+    }
+
+    <!-- Step 2: Upload the ZIP, once the project exists -->
+    @if (projectId() && !analysisResult()) {
+      <div class="upload-section">
+        <p class="step-label">Project created. Now upload your code:</p>
+
+        <input
+          type="file"
+          accept=".zip"
+          (change)="onFileSelected($event)"
+        />
+
+        @if (errorMessage()) {
+          <div class="server-error">{{ errorMessage() }}</div>
+        }
+
+        <button
+          type="button"
+          [disabled]="isUploading()"
+          (click)="onUpload()"
+        >
+          {{ isUploading() ? 'Analyzing...' : 'Upload and Analyze' }}
+        </button>
+      </div>
+    }
+
+    <!-- Step 3: Show the result -->
+    @if (analysisResult(); as result) {
+      <div class="result-section">
+        <h2>Analysis Complete</h2>
+        <div class="result-grid">
+          <div class="result-item critical">
+            <span class="result-count">{{ result.criticalCount }}</span>
+            <span class="result-label">Critical</span>
+          </div>
+          <div class="result-item high">
+            <span class="result-count">{{ result.highCount }}</span>
+            <span class="result-label">High</span>
+          </div>
+          <div class="result-item medium">
+            <span class="result-count">{{ result.mediumCount }}</span>
+            <span class="result-label">Medium</span>
+          </div>
+          <div class="result-item low">
+            <span class="result-count">{{ result.lowCount }}</span>
+            <span class="result-label">Low</span>
+          </div>
+        </div>
+        <p class="total-text">{{ result.totalIssues }} total issue(s) found.</p>
+
+        <button type="button" (click)="goToDashboard()">Back to Dashboard</button>
+      </div>
+    }
+  </div>
+</div>

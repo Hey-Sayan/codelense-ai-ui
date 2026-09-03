@@ -39,7 +39,7 @@
 }
 
 .sidebar {
-  width: 300px;
+  width: 250px;
   background: white;
   border-right: 1px solid #e5e7eb;
   padding: 1.5rem;
@@ -50,6 +50,23 @@
   font-size: 1.1rem;
   margin: 0 0 1rem 0;
   color: #1a1a1a;
+}
+
+.new-project-btn {
+  width: 100%;
+  padding: 0.6rem;
+  margin-bottom: 1rem;
+  background-color: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.new-project-btn:hover {
+  background-color: #4338ca;
 }
 
 .status-text {

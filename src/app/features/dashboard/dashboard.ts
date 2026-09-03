@@ -47,6 +47,10 @@ export class Dashboard implements OnInit {
     });
   }
 
+  goToCreateProject(): void {
+    this.router.navigate(['/projects/create']);
+  }
+
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
