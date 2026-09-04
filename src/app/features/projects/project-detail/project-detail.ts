@@ -86,6 +86,7 @@ export class ProjectDetail implements OnInit {
     this.projectService.getAnalysisById(analysisId).subscribe({
       next: (data) => {
         this.selectedAnalysis.set(data);
+        
         this.isLoadingDetail.set(false);
       },
       error: () => {
