@@ -4,11 +4,12 @@ import { Router } from '@angular/router';
 import { ProjectService } from '../../core/services/project.service';
 import { AuthService } from '../../core/services/auth.service';
 import { Project } from '../../shared/models/project.model';
+import { ProjectCreate } from '../projects/project-create/project-create';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProjectCreate],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css'
 })
@@ -17,6 +18,9 @@ export class Dashboard implements OnInit {
   isLoading = signal(true);
   errorMessage = signal<string | null>(null);
   userName = signal<string>('');
+  selectedProjectId = signal<number | null>(null);
+  showCreateModal = signal(false);
+  sidebarOpen = signal(false);
 
   constructor(
     private projectService: ProjectService,
@@ -47,8 +51,32 @@ export class Dashboard implements OnInit {
     });
   }
 
+  selectProject(project: Project): void {
+    this.selectedProjectId.set(project.id);
+    this.sidebarOpen.set(false);
+    this.router.navigate(['/projects', project.id]);
+  }
+
+  toggleSidebar(): void {
+    this.sidebarOpen.set(!this.sidebarOpen());
+  }
+
+  closeSidebar(): void {
+    this.sidebarOpen.set(false);
+  }
+
   goToCreateProject(): void {
-    this.router.navigate(['/projects/create']);
+    this.showCreateModal.set(true);
+    this.sidebarOpen.set(false);
+  }
+
+  onProjectCreated(): void {
+    this.showCreateModal.set(false);
+    this.loadProjects();
+  }
+
+  closeCreateModal(): void {
+    this.showCreateModal.set(false);
   }
 
   logout(): void {

@@ -1,70 +1,72 @@
-<div class="page-container">
-  <div class="page-card">
-    <h1>Create New Project</h1>
-    <p class="subtitle">Upload a ZIP file containing your C# project to analyze it.</p>
+<div class="modal-overlay" (click)="onClose()">
+  <div class="page-card" (click)="$event.stopPropagation()">
+    <button class="close-btn" type="button" (click)="onClose()" aria-label="Close">×</button>
 
-    <!-- Step 1: Create the project -->
-    @if (!projectId()) {
-      <form [formGroup]="projectForm" (ngSubmit)="onCreateProject()">
+    <h1>Create new project</h1>
+    <p class="subtitle">Upload a ZIP or connect a GitHub repo to analyze your code.</p>
+
+    @if (!analysisResult() && !githubPending()) {
+      <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
-          <label for="name">Project Name</label>
-          <input
-            id="name"
-            type="text"
-            formControlName="name"
-            placeholder="My C# Project"
-          />
+          <label for="name">Project name</label>
+          <input id="name" type="text" formControlName="name" placeholder="My C# Project" />
           @if (projectForm.get('name')?.touched && projectForm.get('name')?.invalid) {
             <span class="error-text">Project name is required.</span>
           }
         </div>
 
         <div class="form-group">
-          <label for="sourceType">Source Type</label>
+          <label for="sourceType">File type</label>
           <select id="sourceType" formControlName="sourceType">
-            <option value="Zip">ZIP Upload</option>
+            <option value="Zip">ZIP upload</option>
+            <option value="GitHub">GitHub URL</option>
           </select>
         </div>
+
+        @if (sourceType === 'Zip') {
+          <div class="form-group">
+            <label for="file">Upload file</label>
+            <input id="file" type="file" accept=".zip" (change)="onFileSelected($event)" />
+            @if (selectedFile()) {
+              <span class="file-name">{{ selectedFile()?.name }}</span>
+            }
+            @if (fileError()) {
+              <span class="error-text">{{ fileError() }}</span>
+            }
+          </div>
+        }
+
+        @if (sourceType === 'GitHub') {
+          <div class="form-group">
+            <label for="repoUrl">GitHub repository URL</label>
+            <input id="repoUrl" type="text" formControlName="repositoryUrl" placeholder="https://github.com/user/repo" />
+            @if (projectForm.get('repositoryUrl')?.touched && projectForm.get('repositoryUrl')?.invalid) {
+              <span class="error-text">Enter a valid GitHub URL.</span>
+            }
+          </div>
+        }
 
         @if (errorMessage()) {
           <div class="server-error">{{ errorMessage() }}</div>
         }
 
-        <button type="submit" [disabled]="isCreatingProject()">
-          {{ isCreatingProject() ? 'Creating...' : 'Create Project' }}
+        <button type="submit" [disabled]="isSubmitting()">
+          {{ isSubmitting() ? 'Working...' : 'Create & analyze' }}
         </button>
       </form>
     }
 
-    <!-- Step 2: Upload the ZIP, once the project exists -->
-    @if (projectId() && !analysisResult()) {
-      <div class="upload-section">
-        <p class="step-label">Project created. Now upload your code:</p>
-
-        <input
-          type="file"
-          accept=".zip"
-          (change)="onFileSelected($event)"
-        />
-
-        @if (errorMessage()) {
-          <div class="server-error">{{ errorMessage() }}</div>
-        }
-
-        <button
-          type="button"
-          [disabled]="isUploading()"
-          (click)="onUpload()"
-        >
-          {{ isUploading() ? 'Analyzing...' : 'Upload and Analyze' }}
-        </button>
+    @if (githubPending()) {
+      <div class="result-section">
+        <p class="step-label">Project created from GitHub URL.</p>
+        <p class="subtitle">Analysis for GitHub-sourced projects is coming soon — the project is saved and will appear on your dashboard.</p>
+        <button type="button" (click)="onClose()">Done</button>
       </div>
     }
 
-    <!-- Step 3: Show the result -->
     @if (analysisResult(); as result) {
       <div class="result-section">
-        <h2>Analysis Complete</h2>
+        <h2>Analysis complete</h2>
         <div class="result-grid">
           <div class="result-item critical">
             <span class="result-count">{{ result.criticalCount }}</span>
@@ -84,8 +86,7 @@
           </div>
         </div>
         <p class="total-text">{{ result.totalIssues }} total issue(s) found.</p>
-
-        <button type="button" (click)="goToDashboard()">Back to Dashboard</button>
+        <button type="button" (click)="onClose()">Done</button>
       </div>
     }
   </div>

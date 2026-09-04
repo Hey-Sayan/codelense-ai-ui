@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Project } from '../../shared/models/project.model';
+import { Analysis, AnalysisSummary } from '../../shared/models/analysis.model';
 
 interface CreateProjectPayload {
   name: string;
@@ -48,5 +49,13 @@ export class ProjectService {
       `${this.analyzeUrl}/upload?projectId=${projectId}`,
       formData
     );
+  }
+
+  getProjectAnalyses(projectId: number): Observable<AnalysisSummary[]> {
+    return this.http.get<AnalysisSummary[]>(`${this.apiUrl}/${projectId}/analyses`);
+  }
+
+  getAnalysisById(analysisId: number): Observable<Analysis> {
+    return this.http.get<Analysis>(`${this.analyzeUrl}/${analysisId}`);
   }
 }

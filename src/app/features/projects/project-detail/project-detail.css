@@ -1,0 +1,243 @@
+.page {
+  min-height: 100vh;
+  background-color: #f4f5f7;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 1.5rem 2rem;
+}
+
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  font-size: 0.9rem;
+  color: #4f46e5;
+  cursor: pointer;
+  padding: 0;
+}
+
+.page-header h1 {
+  font-size: 1.4rem;
+  margin: 0;
+  color: #1a1a1a;
+}
+
+.source-tag {
+  font-size: 0.75rem;
+  color: #6b7280;
+  background: #e5e7eb;
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.error-banner {
+  background-color: #fee2e2;
+  color: #991b1b;
+  padding: 0.75rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.status-text {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.empty-state {
+  color: #9ca3af;
+  padding: 2rem 0;
+}
+
+.analysis-tabs {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  margin-bottom: 1.5rem;
+}
+
+.analysis-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  padding: 8px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.analysis-tab:hover {
+  background: #f3f4f6;
+}
+
+.analysis-tab.active {
+  border-color: #4f46e5;
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.tab-date {
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.severity-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background: #e5e7eb;
+}
+
+.bar-critical { background-color: #dc2626; }
+.bar-high { background-color: #ea580c; }
+.bar-medium { background-color: #ca8a04; }
+.bar-low { background-color: #2563eb; }
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  max-width: 600px;
+}
+
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0.5rem;
+  border-radius: 8px;
+  background-color: white;
+  border: 1px solid #e5e7eb;
+}
+
+.stat-count {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.25rem;
+}
+
+.stat-card.critical .stat-count { color: #dc2626; }
+.stat-card.high .stat-count { color: #ea580c; }
+.stat-card.medium .stat-count { color: #ca8a04; }
+.stat-card.low .stat-count { color: #2563eb; }
+
+.issue-table {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.issue-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 220px 140px;
+  gap: 12px;
+  padding: 10px 14px;
+  align-items: center;
+  font-size: 0.85rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.issue-header {
+  background: #f9fafb;
+  font-size: 0.75rem;
+  color: #6b7280;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.issue-row-wrapper:last-child .issue-row {
+  border-bottom: none;
+}
+
+.issue-row:not(.issue-header) {
+  cursor: pointer;
+}
+
+.issue-row:not(.issue-header):hover {
+  background: #f9fafb;
+}
+
+.badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  text-align: center;
+  width: fit-content;
+}
+
+.badge.critical { background: #fee2e2; color: #991b1b; }
+.badge.high { background: #ffedd5; color: #9a3412; }
+.badge.medium { background: #fef3c7; color: #92400e; }
+.badge.low { background: #dbeafe; color: #1e40af; }
+
+.issue-title {
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.issue-location {
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.issue-category {
+  color: #6b7280;
+  font-size: 0.8rem;
+}
+
+.issue-detail {
+  padding: 12px 14px 16px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+.issue-detail p {
+  margin: 0 0 8px;
+}
+
+.issue-detail p:last-child {
+  margin-bottom: 0;
+}
+
+.no-suggestion {
+  color: #9ca3af;
+}
+
+.fixed-code {
+  background: #1a1a1a;
+  color: #f3f4f6;
+  padding: 10px 12px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  overflow-x: auto;
+  margin: 0 0 8px;
+}
+
+.issue-source {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
