@@ -36,3 +36,7 @@ export interface AnalysisSummary {
   mediumCount: number;
   lowCount: number;
 }
+
+export interface GitHubBranch {
+  name: string;
+}

@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Project } from '../../shared/models/project.model';
-import { Analysis, AnalysisSummary } from '../../shared/models/analysis.model';
+import { Analysis, AnalysisSummary, GitHubBranch } from '../../shared/models/analysis.model';
 
 interface CreateProjectPayload {
   name: string;
   repositoryUrl?: string;
   sourceType: string;
+  gitHubToken?: string;
 }
 
 export interface AnalysisResultSummary {
@@ -57,5 +58,16 @@ export class ProjectService {
 
   getAnalysisById(analysisId: number): Observable<Analysis> {
     return this.http.get<Analysis>(`${this.analyzeUrl}/${analysisId}`);
+  }
+
+  getProjectBranches(projectId: number): Observable<GitHubBranch[]> {
+    return this.http.get<GitHubBranch[]>(`${this.apiUrl}/${projectId}/branches`);
+  }
+
+  analyzeFromGitHub(projectId: number, branch: string): Observable<AnalysisResultSummary> {
+    return this.http.post<AnalysisResultSummary>(
+      `${this.analyzeUrl}/github?projectId=${projectId}&branch=${encodeURIComponent(branch)}`,
+      {}
+    );
   }
 }

@@ -11,6 +11,67 @@
     <div class="error-banner">{{ errorMessage() }}</div>
   }
 
+  @if (project(); as p) {
+    <div class="reanalyze-panel">
+      <p class="reanalyze-label">Re-analyze this project</p>
+
+      @if (p.sourceType === 'GitHub') {
+        <div class="reanalyze-row">
+          @if (isLoadingBranches()) {
+            <span class="status-text">Loading branches...</span>
+          } @else if (branches().length === 0) {
+            <span class="status-text error">Could not load branches for this repo.</span>
+          } @else {
+            <select
+              class="branch-select"
+              [(ngModel)]="selectedBranch"
+              [disabled]="isReanalyzing()"
+            >
+              @for (b of branches(); track b.name) {
+                <option [value]="b.name">{{ b.name }}</option>
+              }
+            </select>
+            <button
+              class="reanalyze-btn"
+              [disabled]="isReanalyzing()"
+              (click)="reanalyzeGitHub()"
+            >
+              {{ isReanalyzing() ? 'Analyzing...' : 'Pull latest & analyze' }}
+            </button>
+          }
+        </div>
+      }
+
+      @if (p.sourceType === 'Zip') {
+        <div class="reanalyze-row">
+          <input
+            type="file"
+            accept=".zip"
+            [disabled]="isReanalyzing()"
+            (change)="onFileSelected($event)"
+          />
+          @if (selectedFile()) {
+            <span class="file-name">{{ selectedFile()?.name }}</span>
+          }
+          <button
+            class="reanalyze-btn"
+            [disabled]="isReanalyzing()"
+            (click)="reanalyzeZip()"
+          >
+            {{ isReanalyzing() ? 'Analyzing...' : 'Upload new version & analyze' }}
+          </button>
+        </div>
+      }
+
+      @if (reanalyzeError()) {
+        <p class="status-text error">{{ reanalyzeError() }}</p>
+      }
+      @if (reanalyzeSuccess()) {
+        <p class="status-text success">New analysis complete - results below.</p>
+      }
+    </div>
+  }
+
   @if (isLoadingAnalyses()) {
     <p class="status-text">Loading analysis history...</p>
   }
@@ -85,7 +146,18 @@
             <div class="issue-row" (click)="toggleIssue(issue.id)">
               <span class="badge" [class]="severityClass(issue.severity)">{{ issue.severity }}</span>
               <span class="issue-title">{{ issue.title }}</span>
-              <span class="issue-location">{{ issue.filePath }}:{{ issue.lineNumber }}</span>
+              @if (githubLineUrl(issue); as url) {
+                <a
+                  class="issue-location link"
+                  [href]="url"
+                  target="_blank"
+                  rel="noopener"
+                  [title]="issue.filePath"
+                  (click)="$event.stopPropagation()"
+                >{{ shortLocation(issue) }}</a>
+              } @else {
+                <span class="issue-location" [title]="issue.filePath">{{ shortLocation(issue) }}</span>
+              }
               <span class="issue-category">{{ issue.category }}</span>
             </div>
 
