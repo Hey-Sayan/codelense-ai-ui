@@ -133,51 +133,74 @@
     @if (analysis.issues.length === 0) {
       <p class="status-text">No issues found in this analysis.</p>
     } @else {
-      <div class="issue-table">
-        <div class="issue-row issue-header">
-          <span>Severity</span>
-          <span>Issue</span>
-          <span>Location</span>
-          <span>Category</span>
-        </div>
+      @for (group of groupedIssues(analysis); track group.filePath) {
+        <div class="file-group">
+          <div class="file-group-header">
+            <span class="file-icon">&#128196;</span>
+            <span class="file-name-header">{{ group.fileName }}</span>
+            <span class="file-issue-count">{{ group.issues.length }} issue{{ group.issues.length === 1 ? '' : 's' }}</span>
+          </div>
 
-        @for (issue of analysis.issues; track issue.id) {
-          <div class="issue-row-wrapper">
-            <div class="issue-row" (click)="toggleIssue(issue.id)">
-              <span class="badge" [class]="severityClass(issue.severity)">{{ issue.severity }}</span>
-              <span class="issue-title">{{ issue.title }}</span>
-              @if (githubLineUrl(issue); as url) {
-                <a
-                  class="issue-location link"
-                  [href]="url"
-                  target="_blank"
-                  rel="noopener"
-                  [title]="issue.filePath"
-                  (click)="$event.stopPropagation()"
-                >{{ shortLocation(issue) }}</a>
-              } @else {
-                <span class="issue-location" [title]="issue.filePath">{{ shortLocation(issue) }}</span>
-              }
-              <span class="issue-category">{{ issue.category }}</span>
+          <div class="issue-table">
+            <div class="issue-row issue-header">
+              <span>Severity</span>
+              <span>Issue</span>
+              <span>Location</span>
+              <span>Category</span>
             </div>
 
-            @if (expandedIssueId() === issue.id) {
-              <div class="issue-detail">
-                <p><strong>Description:</strong> {{ issue.description }}</p>
-                @if (issue.suggestion) {
-                  <p><strong>Suggested fix:</strong> {{ issue.suggestion }}</p>
-                } @else {
-                  <p class="no-suggestion"><strong>Suggested fix:</strong> Not yet available for this issue.</p>
+            @for (issue of group.issues; track issue.id) {
+              <div class="issue-row-wrapper">
+                <div class="issue-row" (click)="toggleIssue(issue.id)">
+                  <span class="badge" [class]="severityClass(issue.severity)">{{ issue.severity }}</span>
+                  <span class="issue-title">{{ issue.title }}</span>
+                  @if (githubLineUrl(issue); as url) {
+                    <a
+                      class="issue-location link"
+                      [href]="url"
+                      target="_blank"
+                      rel="noopener"
+                      [title]="issue.filePath"
+                      (click)="$event.stopPropagation()"
+                    >{{ shortLocation(issue) }}</a>
+                  } @else {
+                    <span class="issue-location" [title]="issue.filePath">{{ shortLocation(issue) }}</span>
+                  }
+                  <span class="issue-category">{{ issue.category }}</span>
+                </div>
+
+                @if (expandedIssueId() === issue.id) {
+                  <div class="issue-detail">
+                    <p><strong>Description:</strong> {{ issue.description }}</p>
+                    @if (issue.suggestion) {
+                      <p><strong>Suggested fix:</strong> {{ issue.suggestion }}</p>
+                    } @else {
+                      <p class="no-suggestion"><strong>Suggested fix:</strong> Not yet available for this issue.</p>
+                    }
+                    @if (snippetLines(issue).length > 0) {
+                      <div class="code-snippet">
+                        @for (line of snippetLines(issue); track line.num) {
+                          <div class="snippet-line" [class.target-line]="line.isTarget">
+                            <span class="snippet-line-num">{{ line.num }}</span>
+                            <span class="snippet-line-text">{{ line.text }}</span>
+                          </div>
+                        }
+                      </div>
+                    }
+                    @if (issue.fixedCode) {
+                      <pre class="fixed-code">{{ issue.fixedCode }}</pre>
+                    }
+                    @if (isWholeFileIssue(issue)) {
+                      <p class="whole-file-note">This was detected across the whole file, not tied to one specific line.</p>
+                    }
+                    <p class="issue-source">Detected by: {{ issue.source }}</p>
+                  </div>
                 }
-                @if (issue.fixedCode) {
-                  <pre class="fixed-code">{{ issue.fixedCode }}</pre>
-                }
-                <p class="issue-source">Detected by: {{ issue.source }}</p>
               </div>
             }
           </div>
-        }
-      </div>
+        </div>
+      }
     }
   }
 </div>

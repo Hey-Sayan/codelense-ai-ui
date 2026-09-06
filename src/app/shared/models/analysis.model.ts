@@ -8,6 +8,8 @@ export interface Issue {
   description: string;
   suggestion: string | null;
   fixedCode: string | null;
+  codeSnippet: string | null;
+  snippetStartLine: number | null;
   source: string;
 }
 

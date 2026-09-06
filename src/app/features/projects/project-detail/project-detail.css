@@ -218,6 +218,78 @@
 .stat-card.medium .stat-count { color: #ca8a04; }
 .stat-card.low .stat-count { color: #2563eb; }
 
+/* File grouping */
+
+.file-group {
+  margin-bottom: 1.5rem;
+}
+
+.file-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 4px;
+  margin-bottom: 6px;
+}
+
+.file-icon {
+  font-size: 0.9rem;
+}
+
+.file-name-header {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: 'Consolas', 'Courier New', monospace;
+}
+
+.file-issue-count {
+  font-size: 0.75rem;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.whole-file-note {
+  color: #9ca3af;
+  font-style: italic;
+}
+
+.code-snippet {
+  background: #1a1a1a;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 0 0 8px;
+  font-family: 'Consolas', 'Courier New', monospace;
+  font-size: 0.8rem;
+}
+
+.snippet-line {
+  display: flex;
+  padding: 1px 12px;
+  white-space: pre;
+}
+
+.snippet-line.target-line {
+  background: rgba(220, 38, 38, 0.25);
+  border-left: 3px solid #dc2626;
+  padding-left: 9px;
+}
+
+.snippet-line-num {
+  color: #6b7280;
+  min-width: 32px;
+  text-align: right;
+  margin-right: 12px;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.snippet-line-text {
+  color: #f3f4f6;
+}
+
 /* Issue table */
 
 .issue-table {

@@ -140,7 +140,49 @@ export class ProjectDetail implements OnInit {
     const normalizedPath = issue.filePath.replace(/\\/g, '/');
     const segments = normalizedPath.split('/');
     const fileName = segments[segments.length - 1] || issue.filePath;
+
+    if (this.isWholeFileIssue(issue)) {
+      return fileName;
+    }
+
     return `${fileName}:${issue.lineNumber}`;
+  }
+
+  isWholeFileIssue(issue: Issue): boolean {
+    return issue.source.startsWith('AI');
+  }
+
+  snippetLines(issue: Issue): { num: number; text: string; isTarget: boolean }[] {
+    if (!issue.codeSnippet || issue.snippetStartLine == null) {
+      return [];
+    }
+
+    return issue.codeSnippet.split('\n').map((text, index) => {
+      const num = issue.snippetStartLine! + index;
+      return { num, text, isTarget: num === issue.lineNumber };
+    });
+  }
+
+  groupedIssues(analysis: Analysis): { filePath: string; fileName: string; issues: Issue[] }[] {
+    const groups = new Map<string, Issue[]>();
+
+    for (const issue of analysis.issues) {
+      const existing = groups.get(issue.filePath);
+      if (existing) {
+        existing.push(issue);
+      } else {
+        groups.set(issue.filePath, [issue]);
+      }
+    }
+
+    return Array.from(groups.entries())
+      .map(([filePath, issues]) => {
+        const normalizedPath = filePath.replace(/\\/g, '/');
+        const segments = normalizedPath.split('/');
+        const fileName = segments[segments.length - 1] || filePath;
+        return { filePath, fileName, issues };
+      })
+      .sort((a, b) => a.fileName.localeCompare(b.fileName));
   }
 
   githubLineUrl(issue: Issue): string | null {
@@ -160,8 +202,18 @@ export class ProjectDetail implements OnInit {
       return null;
     }
 
-    const branch = this.selectedBranch() || 'main';
+    const branch = this.selectedBranch();
+    if (!branch) {
+      return null;
+    }
     const cleanRepoUrl = p.repositoryUrl.replace(/\/$/, '').replace(/\.git$/, '');
+
+    // Whole-file ML detections don't have a real line number - link to the
+    // file itself without a #L anchor, rather than falsely pointing at
+    // line 1 as if something specific was found there.
+    if (this.isWholeFileIssue(issue)) {
+      return `${cleanRepoUrl}/blob/${branch}/${relativePath}`;
+    }
 
     return `${cleanRepoUrl}/blob/${branch}/${relativePath}#L${issue.lineNumber}`;
   }
