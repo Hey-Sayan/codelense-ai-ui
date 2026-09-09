@@ -10,6 +10,7 @@ export interface Issue {
   fixedCode: string | null;
   codeSnippet: string | null;
   snippetStartLine: number | null;
+  confidence: number;
   source: string;
 }
 

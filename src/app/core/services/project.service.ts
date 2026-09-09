@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Project } from '../../shared/models/project.model';
-import { Analysis, AnalysisSummary, GitHubBranch } from '../../shared/models/analysis.model';
+import { Analysis, AnalysisSummary, GitHubBranch, Issue } from '../../shared/models/analysis.model';
 
 interface CreateProjectPayload {
   name: string;
@@ -69,5 +69,9 @@ export class ProjectService {
       `${this.analyzeUrl}/github?projectId=${projectId}&branch=${encodeURIComponent(branch)}`,
       {}
     );
+  }
+
+  generateAiSuggestion(issueId: number): Observable<Issue> {
+    return this.http.post<Issue>(`${this.analyzeUrl}/issues/${issueId}/suggest`, {});
   }
 }
