@@ -25,8 +25,8 @@ export interface AnalysisResultSummary {
   providedIn: 'root'
 })
 export class ProjectService {
-  private readonly apiUrl = 'https://987trckv-7205.uks1.devtunnels.ms/api/projects';
-  private readonly analyzeUrl = 'https://987trckv-7205.uks1.devtunnels.ms/api/analyze';
+  private readonly apiUrl = 'https://localhost:7205/api/projects';
+  private readonly analyzeUrl = 'https://localhost:7205/api/analyze';
 
   constructor(private http: HttpClient) {}
 

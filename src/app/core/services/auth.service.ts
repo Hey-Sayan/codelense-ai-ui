@@ -18,7 +18,7 @@ interface LoginPayload {
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly apiUrl = 'https://987trckv-7205.uks1.devtunnels.ms/api/auth';
+  private readonly apiUrl = 'https://localhost:7205/api/auth';
   private readonly tokenKey = 'codelense_token';
   private readonly userKey = 'codelense_user';
 

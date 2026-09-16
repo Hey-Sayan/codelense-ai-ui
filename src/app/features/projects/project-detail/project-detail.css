@@ -207,14 +207,14 @@
 }
 
 /* =========================================================
-   STATISTICS
+   STATISTICS (CLICKABLE FILTER CARDS)
    ========================================================= */
 
 .stat-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 0.9rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   max-width: 1500px;
 }
 
@@ -226,6 +226,29 @@
   border-radius: 8px;
   background-color: white;
   border: 1px solid #e5e7eb;
+  cursor: pointer;
+  user-select: none;
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+    border-color 0.12s ease, opacity 0.12s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card:focus-visible {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+/* Non-selected cards fade slightly while a filter is active */
+.stat-card.dimmed {
+  opacity: 0.5;
+}
+
+.stat-card.dimmed:hover {
+  opacity: 0.8;
 }
 
 .stat-count {
@@ -250,9 +273,89 @@
 .stat-card.medium .stat-count {
   color: #ca8a04;
 }
-
+ 
 .stat-card.low .stat-count {
   color: #2563eb;
+}
+
+/* Active (selected) state per severity */
+.stat-card.critical.active {
+  border-color: #dc2626;
+  background: #fef2f2;
+  box-shadow: 0 0 0 2px #dc2626 inset;
+}
+
+.stat-card.high.active {
+  border-color: #ea580c;
+  background: #fff7ed;
+  box-shadow: 0 0 0 2px #ea580c inset;
+}
+
+.stat-card.medium.active {
+  border-color: #ca8a04;
+  background: #fffbeb;
+  box-shadow: 0 0 0 2px #ca8a04 inset;
+}
+
+.stat-card.low.active {
+  border-color: #2563eb;
+  background: #eff6ff;
+  box-shadow: 0 0 0 2px #2563eb inset;
+}
+
+/* =========================================================
+   ACTIVE FILTER STATUS BAR
+   ========================================================= */
+
+.filter-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: #374151;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-bottom: 1.5rem;
+}
+
+.filter-status-label {
+  text-transform: capitalize;
+  font-weight: 700;
+}
+
+.filter-status-label.critical {
+  color: #dc2626;
+}
+
+.filter-status-label.high {
+  color: #ea580c;
+}
+
+.filter-status-label.medium {
+  color: #ca8a04;
+}
+
+.filter-status-label.low {
+  color: #2563eb;
+}
+
+.clear-filter-btn {
+  background: none;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  color: #6b7280;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.clear-filter-btn:hover {
+  background: #f3f4f6;
+  color: #374151;
 }
 
 /* =========================================================
@@ -1016,6 +1119,10 @@
   .stat-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.6rem;
+  }
+
+  .filter-status {
+    flex-wrap: wrap;
   }
 
   .file-group-header {

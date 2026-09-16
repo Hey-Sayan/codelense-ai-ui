@@ -168,10 +168,18 @@
       }
     </div>
 
-    <!-- SEVERITY STATISTICS -->
+    <!-- SEVERITY STATISTICS (CLICKABLE FILTERS) -->
     <div class="stat-grid">
 
-      <div class="stat-card critical">
+      <div
+        class="stat-card critical"
+        [class.active]="activeFilter() === 'critical'"
+        [class.dimmed]="activeFilter() !== null && activeFilter() !== 'critical'"
+        role="button"
+        tabindex="0"
+        (click)="toggleFilter('critical')"
+        (keydown.enter)="toggleFilter('critical')"
+      >
         <span class="stat-count">
           {{ analysis.criticalCount }}
         </span>
@@ -181,7 +189,15 @@
         </span>
       </div>
 
-      <div class="stat-card high">
+      <div
+        class="stat-card high"
+        [class.active]="activeFilter() === 'high'"
+        [class.dimmed]="activeFilter() !== null && activeFilter() !== 'high'"
+        role="button"
+        tabindex="0"
+        (click)="toggleFilter('high')"
+        (keydown.enter)="toggleFilter('high')"
+      >
         <span class="stat-count">
           {{ analysis.highCount }}
         </span>
@@ -191,7 +207,15 @@
         </span>
       </div>
 
-      <div class="stat-card medium">
+      <div
+        class="stat-card medium"
+        [class.active]="activeFilter() === 'medium'"
+        [class.dimmed]="activeFilter() !== null && activeFilter() !== 'medium'"
+        role="button"
+        tabindex="0"
+        (click)="toggleFilter('medium')"
+        (keydown.enter)="toggleFilter('medium')"
+      >
         <span class="stat-count">
           {{ analysis.mediumCount }}
         </span>
@@ -201,7 +225,15 @@
         </span>
       </div>
 
-      <div class="stat-card low">
+      <div
+        class="stat-card low"
+        [class.active]="activeFilter() === 'low'"
+        [class.dimmed]="activeFilter() !== null && activeFilter() !== 'low'"
+        role="button"
+        tabindex="0"
+        (click)="toggleFilter('low')"
+        (keydown.enter)="toggleFilter('low')"
+      >
         <span class="stat-count">
           {{ analysis.lowCount }}
         </span>
@@ -213,10 +245,31 @@
 
     </div>
 
-    @if (analysis.issues.length === 0) {
+    <!-- ACTIVE FILTER INDICATOR -->
+    @if (activeFilter()) {
+      <div class="filter-status">
+        <span>
+          Showing only
+          <strong class="filter-status-label" [class]="activeFilter()">
+            {{ activeFilter() }}
+          </strong>
+          issues
+        </span>
+
+        <button class="clear-filter-btn" (click)="clearFilter()">
+          Clear filter ✕
+        </button>
+      </div>
+    }
+
+    @if (groupedIssues(analysis).length === 0) {
 
       <p class="status-text">
-        No issues found in this analysis.
+        {{
+          activeFilter()
+            ? 'No ' + activeFilter() + ' issues found in this analysis.'
+            : 'No issues found in this analysis.'
+        }}
       </p>
 
     } @else {
@@ -354,7 +407,7 @@
                       [title]="issue.filePath"
                       (click)="$event.stopPropagation()"
                     >
-                      {{ shortLocation(issue) }}
+                      {{ shortLocation(issue) }} 
                     </a>
 
                   } @else {

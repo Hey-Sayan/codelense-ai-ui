@@ -54,6 +54,9 @@ export class ProjectDetail implements OnInit {
   reanalyzeError = signal<string | null>(null);
   reanalyzeSuccess = signal(false);
 
+  // Severity filter state: null = show all, otherwise 'critical' | 'high' | 'medium' | 'low'
+  activeFilter = signal<string | null>(null);
+
   private projectId!: number;
 
   constructor(
@@ -138,6 +141,7 @@ export class ProjectDetail implements OnInit {
   selectAnalysis(analysisId: number): void {
     this.isLoadingDetail.set(true);
     this.expandedIssueId.set(null);
+    this.activeFilter.set(null);
 
     this.projectService.getAnalysisById(analysisId).subscribe({
       next: (data) => {
@@ -155,6 +159,23 @@ export class ProjectDetail implements OnInit {
     this.expandedIssueId.set(
       this.expandedIssueId() === issueId ? null : issueId
     );
+  }
+
+  /**
+   * Toggles the severity filter when a stat card is clicked.
+   * Clicking the already-active card clears the filter.
+   * severity should be passed as 'Critical' | 'High' | 'Medium' | 'Low'
+   * (any casing works since we lowercase internally).
+   */
+  toggleFilter(severity: string): void {
+    const normalized = severity.toLowerCase();
+    this.activeFilter.set(
+      this.activeFilter() === normalized ? null : normalized
+    );
+  }
+
+  clearFilter(): void {
+    this.activeFilter.set(null);
   }
 
   severityClass(severity: string): string {
@@ -508,6 +529,11 @@ export class ProjectDetail implements OnInit {
       )[0];
   }
 
+  /**
+   * Groups issues by file for the given analysis, applying the
+   * active severity filter (if any) before grouping. When
+   * activeFilter is null, all issues are shown as before.
+   */
   groupedIssues(
     analysis: Analysis
   ): {
@@ -515,9 +541,17 @@ export class ProjectDetail implements OnInit {
     fileName: string;
     issues: Issue[];
   }[] {
+    const filter = this.activeFilter();
+
+    const sourceIssues = filter
+      ? analysis.issues.filter(
+          issue => this.severityClass(issue.severity) === filter
+        )
+      : analysis.issues;
+
     const groups = new Map<string, Issue[]>();
 
-    for (const issue of analysis.issues) {
+    for (const issue of sourceIssues) {
       const existing = groups.get(issue.filePath);
 
       if (existing) {
